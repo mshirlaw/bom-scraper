@@ -1,5 +1,5 @@
 # bom-scraper
-A simple web scraper to fetch realtime weather observations in Australia
+A simple web scraper to fetch real time weather observations in Australia
 
 ## Installation
 
