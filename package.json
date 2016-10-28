@@ -2,7 +2,7 @@
 	"name": "bom-scraper",
 	"version": "1.0.0",
 	"description": "A simple web scraper to fetch realtime weather observations in Australia",
-	"main": "bom-scraper.js",
+	"main": "src/bom-scraper.js",
 	"dependencies": {},
 	"devDependencies": {
 		"cheerio": "^0.22.0",
