@@ -12,7 +12,7 @@
 		function fetchCurrentObsFor(state) {
 			
 			var defer = Q.defer();
-			if (!state || !state.match(/^(nsw|vic|qld|wa|tas|act|nt)$/)) {
+			if (!state || !state.match(/^(nsw|vic|qld|wa|tas|act|nt|sa)$/)) {
 				defer.reject({error:'Invalid state abbreviation'});
 			} else {
 				var url = 'http://www.bom.gov.au/' + state + '/observations/' + state + 'all.shtml';
