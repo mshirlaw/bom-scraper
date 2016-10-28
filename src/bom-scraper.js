@@ -1,4 +1,4 @@
-(function(){
+(function () {
 	'use strict';
 	
 	var request = require('request');
@@ -16,40 +16,40 @@
 				defer.reject({error:'Invalid state abbreviation'});
 			} else {
 				var url = 'http://www.bom.gov.au/' + state + '/observations/' + state + 'all.shtml';
-				fetchCurrentObs(url)
+				fetchCurrentObs(url);
 			}
 			return defer.promise;
 			
 			function fetchCurrentObs(url) {
 				
-				request(url, function(error, response, body){	
-					 if(!error){ 
-					 	var $ = cheerio.load(body);
-						var json = {};
+				request.get(url, function(error, response, body){	
+					if(!error){ 
+						var $ = cheerio.load(body);
 						
 						var tableHeaders = $('th');
 						var tableHash = {};
-						tableHeaders.each(function(i, el){
+						tableHeaders.each(function(){
 							var tableHeaderID = $(this).attr('id');
 							if (tableHeaderID.indexOf('-station-') != -1) {
 								var tableID = tableHeaderID.substr(0,tableHeaderID.indexOf('-'));
+								var tableData = {
+									tableHeaderID: tableHeaderID,
+									datetimeAttr: tableID + '-datetime' + ' ' + tableHeaderID,
+									temperatureAttr: tableID + '-tmp' + ' ' + tableHeaderID,
+									windDirectionAttr: tableID + '-wind' + ' ' + tableID + '-wind-dir' + ' ' + tableHeaderID,
+									windSpeedAttr: tableID + '-wind' + ' ' + tableID + '-wind-spd-kmh' + ' ' + tableHeaderID,
+									location: $('a', $(this)).text(),
+								};
 								if (!tableHash[tableID]){
-									tableHash[tableID] = [];
+									tableHash[tableID] = [tableData];
 								} else {
-									tableHash[tableID].push({
-										tableHeaderID: tableHeaderID,
-										datetimeAttr: tableID + '-datetime' + ' ' + tableHeaderID,
-										temperatureAttr: tableID + '-tmp' + ' ' + tableHeaderID,
-										windDirectionAttr: tableID + '-wind' + ' ' + tableID + '-wind-dir' + ' ' + tableHeaderID,
-										windSpeedAttr: tableID + '-wind' + ' ' + tableID + '-wind-spd-kmh' + ' ' + tableHeaderID,
-										location: $('a', $(this)).text(),
-									});
+									tableHash[tableID].push(tableData);
 								}
 							}
 						});
 						
 						var tableData = $('td');
-						tableData.each(function(i, el){
+						tableData.each(function(){
 							var headers = $(this).attr('headers');
 							var tableID = headers.substr(0,headers.indexOf('-'));
 							var tableHeaderID = tableID + headers.substr(headers.indexOf('-station'), headers.length);
@@ -61,25 +61,25 @@
 									datetime.datetime= $(this).text();
 								}
 							} else if (headers.indexOf('-tmp') != -1) {
-								var found = tableHash[tableID].find(function(element){
+								var tmp = tableHash[tableID].find(function(element){
 									return element.tableHeaderID === tableHeaderID;
 								});
-								if (found) {
-									found.temperature = $(this).text();
+								if (tmp) {
+									tmp.temperature = $(this).text();
 								}
 							} else if (headers.indexOf('-wind-dir') != -1) {
-								var found = tableHash[tableID].find(function(element){
+								var windDir = tableHash[tableID].find(function(element){
 									return element.tableHeaderID === tableHeaderID;
 								});
-								if (found) {
-									found.windDirection = $(this).text();
+								if (windDir) {
+									windDir.windDirection = $(this).text();
 								}
 							} else if (headers.indexOf('-wind-spd-kmh') != -1) {
-								var found = tableHash[tableID].find(function(element){
+								var windSpd = tableHash[tableID].find(function(element){
 									return element.tableHeaderID === tableHeaderID;
 								});
-								if (found) {
-									found.windSpeed = $(this).text();
+								if (windSpd) {
+									windSpd.windSpeed = $(this).text();
 								}
 							} 
 						});
