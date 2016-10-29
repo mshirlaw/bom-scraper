@@ -50,38 +50,27 @@
 						
 						var tableData = $('td');
 						tableData.each(function(){
-							var headers = $(this).attr('headers');
+							var td = $(this);
+							var headers = td.attr('headers');
 							var tableID = headers.substr(0,headers.indexOf('-'));
 							var tableHeaderID = tableID + headers.substr(headers.indexOf('-station'), headers.length);
-							if (headers.indexOf('-datetime') != -1) {
-								var datetime = tableHash[tableID].find(function(element){
-									return element.tableHeaderID === tableHeaderID;
-								});
-								if (datetime) {
-									datetime.datetime= $(this).text();
+							var headersToInclude = ['-datetime', '-tmp', '-wind-dir', '-wind-spd-kmh'];
+							headersToInclude.forEach(function(head){
+								if (headers.indexOf(head) != -1) {
+									var foundElement = tableHash[tableID].find(function(searchElement){
+										return searchElement.tableHeaderID === tableHeaderID;
+									});
+									if (foundElement && head === '-datetime') {
+										foundElement.datetime = td.text();
+									} else if (foundElement && head === '-tmp') {
+										foundElement.temperature = td.text();
+									} else if (foundElement && head === '-wind-dir') {
+										foundElement.windDirection = td.text();
+									} else if (foundElement && head === '-wind-spd-kmh') {
+										foundElement.windSpeed = td.text();
+									}
 								}
-							} else if (headers.indexOf('-tmp') != -1) {
-								var tmp = tableHash[tableID].find(function(element){
-									return element.tableHeaderID === tableHeaderID;
-								});
-								if (tmp) {
-									tmp.temperature = $(this).text();
-								}
-							} else if (headers.indexOf('-wind-dir') != -1) {
-								var windDir = tableHash[tableID].find(function(element){
-									return element.tableHeaderID === tableHeaderID;
-								});
-								if (windDir) {
-									windDir.windDirection = $(this).text();
-								}
-							} else if (headers.indexOf('-wind-spd-kmh') != -1) {
-								var windSpd = tableHash[tableID].find(function(element){
-									return element.tableHeaderID === tableHeaderID;
-								});
-								if (windSpd) {
-									windSpd.windSpeed = $(this).text();
-								}
-							} 
+							});
 						});
 						defer.resolve(tableHash);
 					} else {
