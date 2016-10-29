@@ -69,3 +69,5 @@ Use at your own risk. This scraper is dependent upon the structure of the BOM si
 
 * 1.0.0 Initial Release
 * 1.0.1 Added setup code for unit tests
+* 1.0.2 Wrote unit tests for fetchCurrentObsFor
+* 1.0.3 Fixed documentation
