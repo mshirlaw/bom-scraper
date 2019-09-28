@@ -72,3 +72,4 @@ Use at your own risk. This scraper is dependent upon the structure of the BOM si
 * 1.0.2 Wrote unit tests for fetchCurrentObsFor
 * 1.0.3 Fixed documentation
 * 1.0.4 Refactored to remove if else chain
+* 1.0.5 Bump to remove eslint vulnerability
